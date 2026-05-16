@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Certificate Dashboard</title>
+<style>
+body { font-family: Arial; padding: 20px; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background: #1e3a8a;
+    color: white;
+}
+
+.action-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit { background: #f59e0b; color: white; }
+.delete { background: #dc2626; color: white; }
+.view { background: #2563eb; color: white; }
+
+.search-box {
+    margin-bottom: 15px;
+}
+</style>
+</head>
+<body>
+
+<h2>Certificate Dashboard</h2>
+
+<form method="GET" class="search-box">
+    <input type="text" name="search" placeholder="Search by Cert No or Vehicle No">
+    <button type="submit">Search</button>
+    <button type="submit">Show all</button>
+</form>
+            <a href="{{ url_for('home')}}" style="margin-left: 80%; margin-bottom: 10px;">
+               <button class="action-btn view">NEW</button>
+           </a>
+
+
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Certificate No</th>
+        <th>Vehicle Reg</th>
+        <th>Owner</th>
+        <th>Mobile</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for cert in certificates %}
+    <tr>
+        <td>{{ cert[0] }}</td>
+        <td>{{ cert[17] }}</td>
+        <td>{{ cert[5] }}</td>
+        <td>{{ cert[6] }}</td>
+        <td>{{ cert[7] }}</td>
+        <td>
+            <a href="{{ url_for('preview_certificate', cert_id=cert[0]) }}">
+                <button class="action-btn view">View</button>
+            </a>
+
+            <a href="{{ url_for('edit_certificate', cert_id=cert[0]) }}">
+                <button class="action-btn edit">Edit</button>
+            </a>
+
+            <a href="{{ url_for('delete_certificate', cert_id=cert[0]) }}"
+               onclick="return confirm('Are you sure?')">
+                <button class="action-btn delete">Delete</button>
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

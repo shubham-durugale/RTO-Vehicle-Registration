@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Certificate Registration</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+
+      body {
+        background: #f2f4f8;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: auto;
+      }
+
+      .card {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        margin-bottom: 25px;
+      }
+
+      .card h2 {
+        color: #1e3a8a;
+        margin-bottom: 15px;
+        font-size: 22px;
+        border-bottom: 2px solid #e5e7eb;
+        padding-bottom: 10px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group label {
+        font-weight: 600;
+        margin-bottom: 6px;
+        font-size: 14px;
+        color: #333;
+      }
+
+      .form-group input,
+      .form-group select {
+        padding: 10px 12px;
+        border-radius: 6px;
+        border: 1px solid #d1d5db;
+        font-size: 14px;
+        transition: 0.2s;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+      }
+
+      .btn-submit {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(to right, #2563eb, #1e40af);
+        border: none;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .btn-submit:hover {
+        opacity: 0.9;
+      }
+
+      @media (max-width: 600px) {
+        .card {
+          padding: 18px;
+        }
+        .card h2 {
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const creationInput = document.getElementById("creation_date");
+      const validFromInput = document.getElementById("valid_from");
+      const validTillInput = document.getElementById("valid_till");
+
+      creationInput.addEventListener("change", function () {
+        if (!this.value) return;
+
+        // Set Valid From = Creation Date
+        validFromInput.value = this.value;
+
+        // Add 1 year
+        let creationDate = new Date(this.value);
+        creationDate.setFullYear(creationDate.getFullYear() + 1);
+
+        // Format properly
+        let yyyy = creationDate.getFullYear();
+        let mm = String(creationDate.getMonth() + 1).padStart(2, "0");
+        let dd = String(creationDate.getDate()).padStart(2, "0");
+
+        validTillInput.value = `${yyyy}-${mm}-${dd}`;
+      });
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const rto = document.getElementById("passing_rto");
+      const middle = document.getElementById("middle_letters");
+      const digits = document.getElementById("last_digits");
+      const preview = document.getElementById("vehicle_preview");
+
+      function updatePreview() {
+        let rtoValue = rto.value;
+        let middleValue = middle.value.toUpperCase();
+        let digitValue = digits.value;
+
+        // Allow only letters in middle
+        middle.value = middleValue.replace(/[^A-Z]/g, "");
+
+        // Allow only digits in last 4
+        digits.value = digitValue.replace(/[^0-9]/g, "");
+
+        if (
+          rtoValue &&
+          middle.value.length === 2 || middle.value.length === 1 &&
+          digits.value.length === 4
+        ) {
+          preview.value = `${rtoValue}-${middle.value}-${digits.value}`;
+        } else {
+          preview.value = "";
+        }
+      }
+
+      rto.addEventListener("change", updatePreview);
+      middle.addEventListener("input", updatePreview);
+      digits.addEventListener("input", updatePreview);
+    });
+  </script>
+  <body>
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div style="color:red; margin-bottom:10px;">
+      {% for message in messages %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+    <div class="container">
+      <form method="POST" action="/save_certificate" enctype="multipart/form-data">
+        <!-- Certificate / Registration -->
+        <div class="card">
+          <h2>Certificate / Registration</h2>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>COP</label>
+              <input
+                type="text"
+                name="cop"
+                id="cop"
+                value="SHL/16/2025-2026/3000039626/COP/4020"
+                readonly
+              />
+            </div>
+
+            <div class="form-group">
+              <label>COP Valid Till</label>
+              <input type="date" name="cop_valid_till" required />
+            </div>
+
+            <div class="form-group">
+              <label>Creation Date</label>
+              <input
+                type="date"
+                name="creation_date"
+                id="creation_date"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Valid From</label>
+              <input type="date" name="valid_from" id="valid_from" readonly />
+            </div>
+
+            <div class="form-group">
+              <label>Valid Till</label>
+              <input type="date" name="valid_till" id="valid_till" readonly />
+            </div>
+
+            <div class="form-group">
+              <label>Passing (RTO)</label>
+              <select id="passing_rto" name="passing_rto" required>
+                {% for i in range(1, 10) %}      
+                    <option>MH0{{i}}</option>
+                    {% endfor %}
+                {% for i in range(10, 99) %}      
+                    <option>MH{{i}}</option>
+                    {% endfor %}
+                     <option>New Vehicle</option>
+                     <option>Non Series</option>
+                     <option>Inter State</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Middle (2 Letters)</label>
+              <input
+                type="text"
+                id="middle_letters"
+                maxlength="2"
+                pattern="[A-Za-z]{1}"
+                placeholder="AB"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Last 4 Digits</label>
+              <input
+                type="text"
+                id="last_digits"
+                maxlength="4"
+                pattern="[0-9]{4}"
+                placeholder="1234"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Vehicle Reg (Preview)</label>
+              <input
+                type="text"
+                id="vehicle_preview"
+                name="vehicle_reg"
+                readonly
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Vehicle & Owner Details -->
+        <div class="card">
+          <h2>Vehicle & Owner Details</h2>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Owner Name</label>
+              <input type="text" name="owner_name" required />
+            </div>
+
+            <div class="form-group">
+    <label>Mobile Number</label>
+    <input type="tel"
+           name="mobile"
+           id="mobile"
+           inputmode="numeric"
+           pattern="[0-9]{10}"
+           maxlength="10"
+           placeholder="Enter 10 digit mobile number"
+           required>
+</div>
+
+            <div class="form-group">
+              <label>Product</label>
+              <select name="product" required>
+                <option>C3</option>
+                <option>C4</option>
+                <option>CT</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Quantity</label>
+              <select name="quantity" required>
+                {% for i in range(1, 11) %}      
+                    <option>{{i}}</option>
+                    {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" name="email" />
+            </div>
+
+            <div class="form-group">
+    <label>Chassis Number</label>
+    <input type="text"
+           name="chassis"
+           id="chassis"
+           inputmode="numeric"
+           pattern="[0-9]{5}"
+           maxlength="5"
+           placeholder="Enter 5 digit chassis no"
+           required>
+</div>
+
+            <div class="form-group">
+              <label>Year of Manufacturing</label>
+              <select name="year" required>
+                {% for i in range(1970, (now+1) ) %}      
+                    <option>{{i}}</option>
+                    {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Vehicle Make</label>
+              <select name="make" required>
+                <option>TATA</option>
+                <option>Mahindra</option>
+                <option>Eicher</option>
+                <option>AWM</option>
+                <option>Force</option>
+                <option>Hindustan Motors</option>
+                <option>Mahindra&Mahindra</option>
+                <option>Premier</option>
+                <option>Hero Motorcorp</option>
+                <option>jaguar</option>
+                <option>land Rover</option>
+                <option>Bajaj Auto</option>
+                <option>Kamaz Vectra</option>
+                <option>Man</option>
+                <option>SML Isuzu</option>
+                <option>Tatra Vectra Motors LTD</option>
+                <option>VE Commercial Vehicies Limited</option>
+                <option>Maruti Suzuki</option>
+                <option>J.C Bamford</option>
+                <option>BharatBenz</option>
+                <option>Caterpiller Inc</option>
+                <option>DAF</option>
+                <option>Hino</option>
+                <option>TVS Motors</option>
+                <option>Ashok Leyland</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Vehicle Model</label>
+              <select name="model" required>
+                <option>Auto</option>
+                <option>LCV</option>
+                <option>MVC</option>
+                <option>HCV</option>
+                <option>Multi-Axels</option>
+                <option>Bus</option>
+                <option>Truck</option>
+                <option>Other</option>
+                <option>Passenger Vehicle</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Passing RTO Location</label>
+              <select name="rto_location" required>
+                {% for i in range(1, 10) %}      
+                    <option>MH0{{i}}</option>
+                    {% endfor %}
+                {% for i in range(10, 99) %}      
+                    <option>MH{{i}}</option>
+                    {% endfor %}
+                    <option>New Vehicle</option>
+                     <option>Non Series</option>
+                     <option>Inter State</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dealer & Uploads -->
+        <div class="card">
+          <h2>Dealer & Uploads</h2>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Dealer Name</label>
+              <input type="text" name="dealer_name" />
+            </div>
+
+            <div class="form-group">
+              <label>RTO Location</label>
+              <select name="dealer_rto" required>
+                {% for i in range(1, 10) %}      
+                    <option>MH0{{i}}</option>
+                    {% endfor %}
+                {% for i in range(10, 99) %}      
+                    <option>MH{{i}}</option>
+                    {% endfor %}
+                     <option>New Vehicle</option>
+                     <option>Non Series</option>
+                     <option>Inter State</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Front Left Image</label>
+              <input
+                type="file"
+                name="front_left"
+                accept="image/*"
+                capture="environment"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Back Right Image</label>
+              <input
+                type="file"
+                name="back_right"
+                accept="image/*"
+                capture="environment"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label>RC Document Image</label>
+              <input
+                type="file"
+                name="rc_document"
+                accept="image/*"
+                capture="environment"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">SAVE</button>
+    </form>
+    <a href="/"><button  class="btn-submit" style="margin-top: 10px;background-color: red;">CANCLE</button></a>
+    </div>
+  </body>
+  <script>
+document.getElementById("mobile").addEventListener("input", function () {
+
+    // Remove anything that is not a digit
+    this.value = this.value.replace(/\D/g, '');
+
+});
+</script>
+<script>
+document.getElementById("chassis").addEventListener("input", function () {
+    this.value = this.value.replace(/\D/g, '').slice(0, 5);
+});
+</script>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Certificate</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #e0e7ff, #f3f4f6);
+    padding: 20px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.header h2 {
+    color: #1e3a8a;
+    font-size: 26px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #374151;
+}
+
+input {
+    padding: 11px 12px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+}
+
+.button-group {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.update-btn {
+    background: linear-gradient(to right, #2563eb, #1e40af);
+    color: white;
+}
+
+.update-btn:hover {
+    opacity: 0.9;
+}
+
+.cancel-btn {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.cancel-btn:hover {
+    background: #d1d5db;
+}
+.form-group input,
+      .form-group select {
+        padding: 10px 12px;
+        border-radius: 6px;
+        border: 1px solid #d1d5db;
+        font-size: 14px;
+        transition: 0.2s;
+      }
+
+/* Mobile Optimization */
+@media (max-width: 600px) {
+
+    .card {
+        padding: 20px;
+    }
+
+    .header h2 {
+        font-size: 20px;
+    }
+
+    .btn {
+        font-size: 14px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<div class="card">
+
+<div class="header">
+    <h2>Edit Certificate</h2>
+</div>
+
+<form method="POST">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Owner Name</label>
+<input type="text" name="owner_name" value="{{ data[6] }}">
+</div>
+
+<div class="form-group">
+<label>Mobile</label>
+<input type="text" name="mobile" value="{{ data[7] }}">
+</div>
+
+<div class="form-group">
+<label>Vehicle Reg</label>
+<input type="text" name="vehicle_reg" value="{{ data[5] }}">
+</div>
+
+<div class="form-group">
+<label>Product</label>
+<input type="text" name="product" value="{{ data[8] }}">
+</div>
+
+<div class="form-group">
+<label>Quantity</label>
+<input type="number" name="quantity" value="{{ data[9] }}">
+</div>
+
+<div class="form-group">
+<label>Chassis</label>
+<input type="text" name="chassis" value="{{ data[10] }}">
+</div>
+
+<div class="form-group">
+<label>Year</label>
+<input type="text" name="year" value="{{ data[11] }}">
+</div>
+
+<div class="form-group">
+<label>Vehicle Make</label>
+<select name="vehicle_make">
+                <option>TATA</option>
+                <option>Mahindra</option>
+                <option>Eicher</option>
+                <option>AWM</option>
+                <option>Force</option>
+                <option>Hindustan Motors</option>
+                <option>Mahindra&Mahindra</option>
+                <option>Premier</option>
+                <option>Hero Motorcorp</option>
+                <option>jaguar</option>
+                <option>land Rover</option>
+                <option>Bajaj Auto</option>
+                <option>Kamaz Vectra</option>
+                <option>Man</option>
+                <option>SML Isuzu</option>
+                <option>Tatra Vectra Motors LTD</option>
+                <option>VE Commercial Vehicies Limited</option>
+                <option>Maruti Suzuki</option>
+                <option>J.C Bamford</option>
+                <option>BharatBenz</option>
+                <option>Caterpiller Inc</option>
+                <option>DAF</option>
+                <option>Hino</option>
+                <option>TVS Motors</option>
+                <option>Ashok Leyland</option>
+                <option>Other</option>
+                </select>
+</div>
+
+<div class="form-group">
+<label>Vehicle Model</label>
+<select name="vehicle_model">
+    <option>Auto</option>
+                <option>LCV</option>
+                <option>MVC</option>
+                <option>HCV</option>
+                <option>Multi-Axels</option>
+                <option>Bus</option>
+                <option>Truck</option>
+                <option>Other</option>
+                <option>Passenger Vehicle</option>
+                </select>
+</div>
+
+<div class="form-group">
+<label>Dealer Name</label>
+<input type="text" name="dealer_name" value="{{ data[14] }}">
+</div>
+
+<div class="form-group">
+<label>RTO Location</label>
+<select name="rto_location">
+    {% for i in range(1, 10) %}      
+                    <option>MH0{{i}}</option>
+                    {% endfor %}
+                {% for i in range(10, 99) %}      
+                    <option>MH{{i}}</option>
+                    {% endfor %}
+              </select>
+</div>
+
+</div>
+
+<div class="button-group">
+    <button type="submit" class="btn update-btn">Update Certificate</button>
+    <a href="{{ url_for('dashboard') }}">
+        <button type="button" class="btn cancel-btn">Cancel</button>
+    </a>
+</div>
+
+</form>
+
+</div>
+</div>
+
+</body>
+</html>
